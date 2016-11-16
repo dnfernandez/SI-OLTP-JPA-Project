@@ -10,7 +10,7 @@ public class SQLBasedTest {
 	private static String DB_URL = "jdbc:mysql://localhost:3306/si";
 	private static String USER = "siuser";
 	private static String PASS = "sipass";
-	
+
 	static {
 		try {
 			jdbcConnection = createConnection();
@@ -26,6 +26,6 @@ public class SQLBasedTest {
 	private static Connection createConnection() throws ClassNotFoundException, SQLException {
 		Class.forName(JDBC_DRIVER);
 		return DriverManager.getConnection(DB_URL, USER, PASS);
-		
+
 	}
 }

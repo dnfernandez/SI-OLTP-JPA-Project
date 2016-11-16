@@ -14,7 +14,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class EmployeeTest extends SQLBasedTest {
+public class LocalizacionTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
@@ -29,17 +29,17 @@ public class EmployeeTest extends SQLBasedTest {
 	}
 
 	@Test
-	public void testCreateEmployee() throws SQLException {
-		final Employee emp = new Employee();
+	public void testCreateLocalizacion() throws SQLException {
+		final Localizacion loc = new Localizacion();
 
 		doTransaction(emf, em -> {
-			emp.setName("Daniel");
-			em.persist(emp);
+			loc.setLocalidad("Orense");
+			em.persist(loc);
 		});
 
 		// check
 		Statement statement = jdbcConnection.createStatement();
-		ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM Employee WHERE id = " + emp.getId());
+		ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM Localizacion WHERE id = " + loc.getId());
 		rs.next();
 
 		assertEquals(1, rs.getInt("total"));
@@ -50,14 +50,14 @@ public class EmployeeTest extends SQLBasedTest {
 	public void testFindById() throws SQLException {
 		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
-		int id = statement.executeUpdate("INSERT INTO Employee(name) values('Daniel')",
+		int id = statement.executeUpdate("INSERT INTO Localizacion(localidad) values('Orense')",
 				Statement.RETURN_GENERATED_KEYS);
 
 		// test code
-		Employee e = emf.createEntityManager().find(Employee.class, id);
+		Localizacion loc = emf.createEntityManager().find(Localizacion.class, id);
 
 		// assert code
-		assertEquals("Daniel", e.getName());
-		assertEquals(id, e.getId());
+		assertEquals("Orense", loc.getLocalidad());
+		assertEquals(id, loc.getId());
 	}
 }
