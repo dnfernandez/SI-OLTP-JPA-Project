@@ -14,7 +14,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class LocalizacionTest extends SQLBasedTest {
+public class ClimaTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
 	@BeforeClass
@@ -29,17 +29,17 @@ public class LocalizacionTest extends SQLBasedTest {
 	}
 
 	@Test
-	public void testCreateLocalizacion() throws SQLException {
-		final Localizacion loc = new Localizacion();
+	public void testCreateClima() throws SQLException {
+		final Clima cli = new Clima();
 
 		doTransaction(emf, em -> {
-			loc.setLocalidad("Orense");
-			em.persist(loc);
+			cli.setCondicion_meteorologica("Nublado");
+			em.persist(cli);
 		});
 
 		// check
 		Statement statement = jdbcConnection.createStatement();
-		ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM Localizacion WHERE id = " + loc.getId());
+		ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM Clima WHERE id = " + cli.getId());
 		rs.next();
 
 		assertEquals(1, rs.getInt("total"));
@@ -50,14 +50,14 @@ public class LocalizacionTest extends SQLBasedTest {
 	public void testFindById() throws SQLException {
 		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
-		int id = statement.executeUpdate("INSERT INTO Localizacion(localidad) values('Orense')",
+		int id = statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')",
 				Statement.RETURN_GENERATED_KEYS);
 
 		// test code
-		Localizacion loc = emf.createEntityManager().find(Localizacion.class, id);
+		Clima cli= emf.createEntityManager().find(Clima.class, id);
 
 		// assert code
-		assertEquals("Orense", loc.getLocalidad());
-		assertEquals(id, loc.getId());
+		assertEquals("Nublado", cli.getCondicion_meteorologica());
+		assertEquals(id, cli.getId());
 	}
 }
