@@ -40,7 +40,7 @@ public class Conductor {
 		this.edad = edad;
 	}
 
-	public boolean isEbrio() {
+	public boolean getEbrio() {
 		return ebrio;
 	}
 
