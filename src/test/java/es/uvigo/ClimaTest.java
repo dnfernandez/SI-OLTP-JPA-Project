@@ -54,7 +54,7 @@ public class ClimaTest extends SQLBasedTest {
 				Statement.RETURN_GENERATED_KEYS);
 
 		// test code
-		Clima cli= emf.createEntityManager().find(Clima.class, id);
+		Clima cli = emf.createEntityManager().find(Clima.class, id);
 
 		// assert code
 		assertEquals("Nublado", cli.getCondicion_meteorologica());
