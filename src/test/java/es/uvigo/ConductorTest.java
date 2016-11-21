@@ -183,12 +183,12 @@ public class ConductorTest extends SQLBasedTest {
 		statement.executeUpdate("INSERT INTO Conductor(ebrio, edad, rango_edad, sexo) values(true,42,'40-45','Hombre')",
 				Statement.RETURN_GENERATED_KEYS);
 
-		List<Conductor> climas = emf.createEntityManager()
+		List<Conductor> conductores = emf.createEntityManager()
 				.createQuery("SELECT con FROM Conductor con ORDER BY con.edad DESC", Conductor.class).getResultList();
 
 		// check
 		// assertEquals(2, climas.size());
-		assertEquals(50, climas.get(0).getEdad());
-		assertEquals(42, climas.get(1).getEdad());
+		assertEquals(50, conductores.get(0).getEdad());
+		assertEquals(42, conductores.get(1).getEdad());
 	}
 }
