@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Conductor {
@@ -11,6 +12,9 @@ public class Conductor {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
+	
+	@OneToOne
+	private Vehiculo vehiculo;
 	
 	private String sexo;
 	
@@ -54,6 +58,14 @@ public class Conductor {
 
 	public void setRango_edad(String rango_edad) {
 		this.rango_edad = rango_edad;
+	}
+	
+	public Vehiculo getVehiculo() {
+		return vehiculo;
+	}
+	
+	public void setVehiculo(Vehiculo vehiculo) {
+		this.vehiculo = vehiculo;
 	}
 	
 }
