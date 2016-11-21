@@ -1,9 +1,14 @@
 package es.uvigo;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity
 public class Via {
@@ -17,6 +22,9 @@ public class Via {
 	String estado_via;
 	String peligros_calzada;
 	boolean urbano;
+
+	@OneToMany(mappedBy = "via")
+	private Set<Accidente> accidentes = new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -72,6 +80,26 @@ public class Via {
 
 	public void setUrbano(boolean urbano) {
 		this.urbano = urbano;
+	}
+
+	public Set<Accidente> getAccidentes() {
+		return Collections.unmodifiableSet(accidentes);
+	}
+
+	public void addAccidente(Accidente accidente) {
+		accidente.setVia(this);
+	}
+
+	public void removeAccidente(Accidente accidente) {
+		accidente.setVia(null);
+	}
+
+	void internalRemoveAccidente(Accidente accidente) {
+		this.accidentes.remove(accidente);
+	}
+
+	void internalAddAccidente(Accidente accidente) {
+		this.accidentes.add(accidente);
 	}
 
 }
