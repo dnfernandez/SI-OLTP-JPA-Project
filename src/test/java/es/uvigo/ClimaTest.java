@@ -11,6 +11,8 @@ import java.util.List;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+import org.hibernate.LazyInitializationException;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -29,142 +31,82 @@ public class ClimaTest extends SQLBasedTest {
 			emf.close();
 	}
 
+	@After
+	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
+		super.renewConnection();
+	}
+
 	// C
 	@Test
 	public void testCreateClima() throws SQLException {
-		final Clima cli = new Clima();
+		Statement statement = jdbcConnection.createStatement();
+		int id = statement.executeUpdate("INSERT INTO Accidente(fecha) values('2016-01-01')",
+				Statement.RETURN_GENERATED_KEYS);
 
+		final Clima cli = new Clima();
+		cli.setCondicion_meteorologica("Nublado");
 		doTransaction(emf, em -> {
-			cli.setCondicion_meteorologica("Nublado");
 			em.persist(cli);
+			Accidente a = em.find(Accidente.class, id);
+			a.setClima(cli);
 		});
 
+		cli.getAccidentes();
+
 		// check
-		Statement statement = jdbcConnection.createStatement();
+		statement = jdbcConnection.createStatement();
 		ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM Clima WHERE id = " + cli.getId());
 		rs.next();
 
 		assertEquals(1, rs.getInt("total"));
-
 	}
 
 	// R
 	@Test
-	public void testFindById() throws SQLException {
+	public void testFindClima() throws SQLException {
 		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
 		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')",
 				Statement.RETURN_GENERATED_KEYS);
+		int climaId = getLastInsertedId(statement);
 
-		int id = getLastInsertedId(statement);
+		statement = jdbcConnection.createStatement();
+		statement.executeUpdate("INSERT INTO Accidente(fecha, clima_id) values('2016-01-01', " + climaId + ")",
+				Statement.RETURN_GENERATED_KEYS);
+		int accidenteId = getLastInsertedId(statement);
 
 		// test code
-		Clima cli = emf.createEntityManager().find(Clima.class, id);
+		Clima cli = emf.createEntityManager().find(Clima.class, climaId);
 
 		// assert code
 		assertEquals("Nublado", cli.getCondicion_meteorologica());
-		assertEquals(id, cli.getId());
-
+		assertEquals(1, cli.getAccidentes().size());
+		assertEquals(accidenteId, cli.getAccidentes().iterator().next().getId());
+		assertEquals(cli, cli.getAccidentes().iterator().next().getClima());
 	}
 
-	// U
-	@Test
-	public void testUpdateClima() throws SQLException {
-		// prepare database for test
+	private Clima detachedClima= null;
+
+	@Test(expected = LazyInitializationException.class)
+	public void testLazyInitializationException() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')",
-				Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')", Statement.RETURN_GENERATED_KEYS);
+		int climaId = getLastInsertedId(statement);
 
-		int id = getLastInsertedId(statement);
-
-		doTransaction(emf, em -> {
-			Clima cli = em.find(Clima.class, id);
-			cli.setCondicion_meteorologica("Soleado");
-		});
-
-		// check
 		statement = jdbcConnection.createStatement();
-		ResultSet rs = statement.executeQuery("SELECT * FROM Clima WHERE id = " + id);
-		rs.next();
-
-		assertEquals("Soleado", rs.getString("condicion_meteorologica"));
-		assertEquals(id, rs.getInt("id"));
-
-	}
-
-	// U
-	private Clima aDetachedClima = null;
-
-	@Test
-	public void testUpdateByMerge() throws SQLException {
-		// prepare database for test
-		Statement statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')",
+		statement.executeUpdate("INSERT INTO Accidente(fecha, clima_id) values('2016-01-01', " + climaId + ")",
 				Statement.RETURN_GENERATED_KEYS);
-		int id = getLastInsertedId(statement);
+		int accidenteId = getLastInsertedId(statement);
 
-		doTransaction(emf, em -> {
-			aDetachedClima = em.find(Clima.class, id);
-		});
-		// e is detached, because the entitymanager em is closed (see
-		// doTransaction)
-
-		aDetachedClima.setCondicion_meteorologica("Soleado");
-
-		doTransaction(emf, em -> {
-			em.merge(aDetachedClima);
-		});
-
-		// check
 		statement = jdbcConnection.createStatement();
-		ResultSet rs = statement.executeQuery("SELECT * FROM Clima WHERE id = " + id);
-		rs.next();
-
-		assertEquals("Soleado", rs.getString("condicion_meteorologica"));
-		assertEquals(id, rs.getInt("id"));
-	}
-
-	// D
-	@Test
-	public void testDeleteClima() throws SQLException {
-		// prepare database for test
-		Statement statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')",
+		statement.executeUpdate("INSERT INTO Accidente(fecha, clima_id) values('2016-01-01', " + climaId + ")",
 				Statement.RETURN_GENERATED_KEYS);
-		int id = getLastInsertedId(statement);
 
 		doTransaction(emf, em -> {
-			Clima cli = em.find(Clima.class, id);
-			em.remove(cli);
+			detachedClima= em.find(Clima.class, climaId);
 		});
-
-		// check
-		statement = jdbcConnection.createStatement();
-		ResultSet rs = statement.executeQuery("SELECT COUNT(*) as total FROM Clima WHERE id = " + id);
-		rs.next();
-
-		assertEquals(0, rs.getInt("total"));
+		assertEquals(1, detachedClima.getAccidentes().size());
+		assertEquals(accidenteId, detachedClima.getAccidentes().iterator().next().getId());
+		assertEquals(detachedClima, detachedClima.getAccidentes().iterator().next().getId());
 	}
-
-	// L
-	@Test
-	public void testListClima() throws SQLException {
-		// prepare database for test
-		Statement statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('aLluvioso')",
-				Statement.RETURN_GENERATED_KEYS);
-		// prepare database for test
-		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('aVentoso')",
-				Statement.RETURN_GENERATED_KEYS);
-
-		List<Clima> climas = emf.createEntityManager()
-				.createQuery("SELECT cli FROM Clima cli ORDER BY cli.condicion_meteorologica", Clima.class)
-				.getResultList();
-
-		// check
-		//assertEquals(2, climas.size());
-		assertEquals("aLluvioso", climas.get(0).getCondicion_meteorologica());
-		assertEquals("aVentoso", climas.get(1).getCondicion_meteorologica());
-	}
-
 }
