@@ -148,7 +148,7 @@ public class ClimaTest extends SQLBasedTest {
 
 	// L
 	@Test
-	public void testListEmployee() throws SQLException {
+	public void testListClima() throws SQLException {
 		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
 		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('aLluvioso')",
