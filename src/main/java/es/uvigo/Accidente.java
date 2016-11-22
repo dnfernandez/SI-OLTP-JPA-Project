@@ -1,11 +1,15 @@
 package es.uvigo;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
 @Entity
@@ -25,6 +29,9 @@ public class Accidente {
 
 	@ManyToOne
 	private Via via;
+
+	@ManyToMany(mappedBy = "accidentes")
+	private Set<Vehiculo> vehiculos = new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -86,5 +93,18 @@ public class Accidente {
 
 	public Via getVia() {
 		return via;
+	}
+
+	public Set<Vehiculo> getVehiculos() {
+		return Collections.unmodifiableSet(this.vehiculos);
+	}
+
+	public void addVehiculo(Vehiculo v) {
+		v.internalAddAccidente(this);
+		this.vehiculos.add(v);
+	}
+
+	public void internalAddVehiculo(Vehiculo vehiculo) {
+		this.vehiculos.add(vehiculo);
 	}
 }

@@ -1,9 +1,15 @@
 package es.uvigo;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Vehiculo {
@@ -25,6 +31,9 @@ public class Vehiculo {
 	private boolean volante_izq;
 
 	private String combustible;
+
+	@ManyToMany
+	private Set<Accidente> accidentes = new HashSet<>();
 
 	public int getId() {
 		return id;
@@ -86,4 +95,16 @@ public class Vehiculo {
 		this.combustible = combustible;
 	}
 
+	public Set<Accidente> getAccidentes() {
+		return Collections.unmodifiableSet(accidentes);
+	}
+
+	public void addAccidente(Accidente a) {
+		a.internalAddVehiculo(this);
+		this.accidentes.add(a);
+	}
+	
+	void internalAddAccidente(Accidente accidente){
+		this.accidentes.add(accidente);
+	}
 }
