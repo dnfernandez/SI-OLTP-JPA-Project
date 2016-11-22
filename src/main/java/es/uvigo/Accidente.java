@@ -33,6 +33,9 @@ public class Accidente {
 	@ManyToMany(mappedBy = "accidentes")
 	private Set<Vehiculo> vehiculos = new HashSet<>();
 
+	@ManyToMany(mappedBy = "accidentes")
+	private Set<Damnificado> damnificados = new HashSet<>();
+
 	public int getId() {
 		return id;
 	}
@@ -106,5 +109,18 @@ public class Accidente {
 
 	public void internalAddVehiculo(Vehiculo vehiculo) {
 		this.vehiculos.add(vehiculo);
+	}
+
+	public Set<Damnificado> getDamnificados() {
+		return Collections.unmodifiableSet(this.damnificados);
+	}
+
+	public void addDamnificado(Damnificado d) {
+		d.internalAddAccidente(this);
+		this.damnificados.add(d);
+	}
+
+	public void internalAddDamnificado(Damnificado damnificado) {
+		this.damnificados.add(damnificado);
 	}
 }
