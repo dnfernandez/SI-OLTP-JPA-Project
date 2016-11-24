@@ -10,6 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Vehiculo {
@@ -31,6 +32,9 @@ public class Vehiculo {
 	private boolean volante_izq;
 
 	private String combustible;
+	
+	@OneToOne
+	private Conductor conductor;
 
 	@ManyToMany
 	private Set<Accidente> accidentes = new HashSet<>();
@@ -106,5 +110,13 @@ public class Vehiculo {
 	
 	void internalAddAccidente(Accidente accidente){
 		this.accidentes.add(accidente);
+	}
+	
+	public Conductor getConductor() {
+		return conductor;
+	}
+	
+	public void setConductor(Conductor conductor) {
+		this.conductor = conductor;
 	}
 }
