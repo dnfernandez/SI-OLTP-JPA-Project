@@ -23,7 +23,6 @@ public class TransactionUtils {
 		} finally {
 			em.close();
 		}
-
 	}
 
 }
