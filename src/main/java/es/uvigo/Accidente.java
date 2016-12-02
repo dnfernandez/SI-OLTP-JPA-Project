@@ -1,5 +1,6 @@
 package es.uvigo;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -102,9 +103,29 @@ public class Accidente {
 		return Collections.unmodifiableSet(this.vehiculos);
 	}
 
+	public void setVehiculos(Collection<Vehiculo> vehiculos) {
+
+		Set<Vehiculo> myVehiculosCopy = new HashSet<>(this.vehiculos);
+		for (Vehiculo veh : myVehiculosCopy) {
+			if (!vehiculos.contains(veh)) {
+				this.removeVehiculo(veh);
+			}
+		}
+
+		for (Vehiculo vehiculo : vehiculos) {
+			this.addVehiculo(vehiculo);
+		}
+
+	}
+
 	public void addVehiculo(Vehiculo v) {
 		v.internalAddAccidente(this);
 		this.vehiculos.add(v);
+	}
+
+	public void removeVehiculo(Vehiculo v) {
+		v.internalRemoveAccidente(this);
+		this.vehiculos.remove(v);
 	}
 
 	public void internalAddVehiculo(Vehiculo vehiculo) {
@@ -113,6 +134,26 @@ public class Accidente {
 
 	public Set<Damnificado> getDamnificados() {
 		return Collections.unmodifiableSet(this.damnificados);
+	}
+
+	public void setDamnificados(Collection<Damnificado> damnificados) {
+
+		Set<Damnificado> myDamnificadosCopy = new HashSet<>(this.damnificados);
+		for (Damnificado dam : myDamnificadosCopy) {
+			if (!damnificados.contains(dam)) {
+				this.removeDamnificado(dam);
+			}
+		}
+
+		for (Vehiculo vehiculo : vehiculos) {
+			this.addVehiculo(vehiculo);
+		}
+
+	}
+
+	public void removeDamnificado(Damnificado d) {
+		d.internalRemoveAccidente(this);
+		this.damnificados.remove(d);
 	}
 
 	public void addDamnificado(Damnificado d) {

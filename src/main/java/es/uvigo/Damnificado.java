@@ -1,5 +1,6 @@
 package es.uvigo;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -84,6 +85,10 @@ public class Damnificado {
 
 	void internalAddAccidente(Accidente accidente) {
 		this.accidentes.add(accidente);
+	}
+
+	public void internalRemoveAccidente(Accidente accidente) {
+		this.accidentes.remove(accidente);
 	}
 
 }

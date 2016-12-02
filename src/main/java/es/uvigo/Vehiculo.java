@@ -32,7 +32,7 @@ public class Vehiculo {
 	private boolean volante_izq;
 
 	private String combustible;
-	
+
 	@OneToOne
 	private Conductor conductor;
 
@@ -102,20 +102,24 @@ public class Vehiculo {
 	public Set<Accidente> getAccidentes() {
 		return Collections.unmodifiableSet(accidentes);
 	}
-
+	
 	public void addAccidente(Accidente a) {
 		a.internalAddVehiculo(this);
 		this.accidentes.add(a);
 	}
-	
-	void internalAddAccidente(Accidente accidente){
+
+	void internalAddAccidente(Accidente accidente) {
 		this.accidentes.add(accidente);
 	}
-	
+
+	public void internalRemoveAccidente(Accidente accidente) {
+		this.accidentes.remove(accidente);
+	}
+
 	public Conductor getConductor() {
 		return conductor;
 	}
-	
+
 	public void setConductor(Conductor conductor) {
 		this.conductor = conductor;
 	}
