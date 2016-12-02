@@ -38,7 +38,7 @@ public class Employee {
 		return id;
 	}
 
-	public void setDeparment(Department d) {
+	public void setDepartment(Department d) {
 		if (this.department != null) {
 			this.department.internalRemoveEmployee(this);
 		}
@@ -65,6 +65,10 @@ public class Employee {
 
 	public void internalAddProject(Project project) {
 		this.projects.add(project);
+	}
+
+	public void internalRemoveProject(Project project) {
+		this.projects.remove(project);
 	}
 
 }

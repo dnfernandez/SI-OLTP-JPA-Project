@@ -40,11 +40,11 @@ public class Department {
 	}
 
 	public void addEmployee(Employee employee) {
-		employee.setDeparment(this);
+		employee.setDepartment(this);
 	}
 
 	public void removeEmployee(Employee employee) {
-		employee.setDeparment(null);
+		employee.setDepartment(null);
 	}
 
 	void internalRemoveEmployee(Employee employee) {

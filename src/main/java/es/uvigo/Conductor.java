@@ -13,7 +13,7 @@ public class Conductor {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 	
-	@OneToOne
+	@OneToOne(mappedBy = "conductor")
 	private Vehiculo vehiculo;
 	
 	private String sexo;

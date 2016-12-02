@@ -41,7 +41,7 @@ public class DepartmentTest extends SQLBasedTest {
 		doTransaction(emf, em -> {
 			em.persist(d);
 			Employee e = em.find(Employee.class, id);
-			e.setDeparment(d);
+			e.setDepartment(d);
 
 		});
 
