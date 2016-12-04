@@ -31,10 +31,10 @@ public class Accidente {
 	@ManyToOne
 	private Via via;
 
-	@ManyToMany(mappedBy = "accidentes")
+	@ManyToMany
 	private Set<Vehiculo> vehiculos = new HashSet<>();
 
-	@ManyToMany(mappedBy = "accidentes")
+	@ManyToMany
 	private Set<Damnificado> damnificados = new HashSet<>();
 
 	public int getId() {
@@ -139,26 +139,26 @@ public class Accidente {
 	public void setDamnificados(Collection<Damnificado> damnificados) {
 
 		Set<Damnificado> myDamnificadosCopy = new HashSet<>(this.damnificados);
-		for (Damnificado dam : myDamnificadosCopy) {
+		for (Damnificado dam: myDamnificadosCopy) {
 			if (!damnificados.contains(dam)) {
 				this.removeDamnificado(dam);
 			}
 		}
 
-		for (Vehiculo vehiculo : vehiculos) {
-			this.addVehiculo(vehiculo);
+		for (Damnificado damnificado: damnificados) {
+			this.addDamnificado(damnificado);
 		}
 
-	}
-
-	public void removeDamnificado(Damnificado d) {
-		d.internalRemoveAccidente(this);
-		this.damnificados.remove(d);
 	}
 
 	public void addDamnificado(Damnificado d) {
 		d.internalAddAccidente(this);
 		this.damnificados.add(d);
+	}
+
+	public void removeDamnificado(Damnificado d) {
+		d.internalRemoveAccidente(this);
+		this.damnificados.remove(d);
 	}
 
 	public void internalAddDamnificado(Damnificado damnificado) {

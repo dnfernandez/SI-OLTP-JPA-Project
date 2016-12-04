@@ -36,7 +36,7 @@ public class Vehiculo {
 	@OneToOne
 	private Conductor conductor;
 
-	@ManyToMany
+	@ManyToMany(mappedBy="vehiculos")
 	private Set<Accidente> accidentes = new HashSet<>();
 
 	public int getId() {
@@ -102,7 +102,7 @@ public class Vehiculo {
 	public Set<Accidente> getAccidentes() {
 		return Collections.unmodifiableSet(accidentes);
 	}
-	
+
 	public void addAccidente(Accidente a) {
 		a.internalAddVehiculo(this);
 		this.accidentes.add(a);

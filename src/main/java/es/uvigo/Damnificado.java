@@ -23,7 +23,7 @@ public class Damnificado {
 	private String gravedad;
 	private String pasajero;
 
-	@ManyToMany
+	@ManyToMany(mappedBy = "damnificados")
 	private Set<Accidente> accidentes = new HashSet<>();
 
 	public int getId() {
