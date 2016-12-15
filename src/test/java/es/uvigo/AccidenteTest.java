@@ -53,7 +53,7 @@ public class AccidenteTest extends SQLBasedTest {
 		int idAc = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Damnificado_Accidente(damnificados_id, accidentes_id) " + "values(" + idDam
+		statement.executeUpdate("INSERT INTO Accidente_Damnificado(damnificados_id, accidentes_id) " + "values(" + idDam
 				+ "," + idAc + ")", Statement.RETURN_GENERATED_KEYS);
 
 		EntityManager em = emf.createEntityManager();
@@ -62,7 +62,7 @@ public class AccidenteTest extends SQLBasedTest {
 
 		statement = jdbcConnection.createStatement();
 		ResultSet rs = statement.executeQuery(
-				"SELECT * FROM Damnificado_Accidente WHERE damnificados_id = " + idDam + " and accidentes_id= " + idAc);
+				"SELECT * FROM Accidente_Damnificado WHERE damnificados_id = " + idDam + " and accidentes_id= " + idAc);
 		rs.next();
 
 		// check
@@ -86,7 +86,7 @@ public class AccidenteTest extends SQLBasedTest {
 		int idAc = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Vehiculo_Accidente(vehiculos_id, accidentes_id) " + "values(" + idVeh
+		statement.executeUpdate("INSERT INTO Accidente_Vehiculo(vehiculos_id, accidentes_id) " + "values(" + idVeh
 				+ "," + idAc + ")", Statement.RETURN_GENERATED_KEYS);
 
 		EntityManager em = emf.createEntityManager();
@@ -95,7 +95,7 @@ public class AccidenteTest extends SQLBasedTest {
 
 		statement = jdbcConnection.createStatement();
 		ResultSet rs = statement.executeQuery(
-				"SELECT * FROM Vehiculo_Accidente WHERE vehiculos_id = " + idVeh + " and accidentes_id= " + idAc);
+				"SELECT * FROM Accidente_Vehiculo WHERE vehiculos_id = " + idVeh + " and accidentes_id= " + idAc);
 		rs.next();
 
 		// check
