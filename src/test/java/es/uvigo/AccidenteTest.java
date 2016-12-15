@@ -20,22 +20,39 @@ import org.junit.Test;
 public class AccidenteTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
+	/**
+	 * Crear entity manager factory.
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("si-database");
 	}
 
+	/**
+	 * Cerrar entity manager factory.
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (emf != null && emf.isOpen())
 			emf.close();
 	}
 
+	/**
+	 * Renovar la conexión.
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	@After
 	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
 		super.renewConnection();
 	}
 
+	/**
+	 * Inserta un damnificado, un accidente y su relación y se comprueba su correcta funcionalidad. 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindDamnificadoAccidente() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
@@ -70,6 +87,10 @@ public class AccidenteTest extends SQLBasedTest {
 		assertEquals(idAc, rs.getInt("accidentes_id"));
 	}
 
+	/**
+	 * Inserta un vehículo, un accidente y su relación y se comprueba su correcta funcionalidad. 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindVehiculoAccidente() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
