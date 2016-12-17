@@ -175,7 +175,7 @@ public class ConductorTest extends SQLBasedTest {
 	// L
 	@Test
 	public void testListConductor() throws SQLException {
-		// prepare database for test
+		// prepare database for tes
 		Statement statement = jdbcConnection.createStatement();
 		statement.executeUpdate("INSERT INTO Conductor(ebrio, edad, rango_edad, sexo) values(true,50,'45-50','Mujer')",
 				Statement.RETURN_GENERATED_KEYS);

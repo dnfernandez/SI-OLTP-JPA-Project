@@ -13,10 +13,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-/**
- * -encoding UTF-8 -charset UTF-8 -docencoding UTF-8
- *
- */
 @Entity
 public class Accidente {
 
@@ -147,7 +143,9 @@ public class Accidente {
 	}
 
 	/**
-	 * Crea una copia del Set de vehiculo que recorre para eliminar los borrados e insertar los nuevos.
+	 * Crea una copia del Set de vehiculo que recorre para eliminar los borrados
+	 * e insertar los nuevos.
+	 * 
 	 * @param vehiculos
 	 */
 	public void setVehiculos(Collection<Vehiculo> vehiculos) {
@@ -167,6 +165,7 @@ public class Accidente {
 
 	/**
 	 * Añade el vehículo a este accidente.
+	 * 
 	 * @param v
 	 */
 	public void addVehiculo(Vehiculo v) {
@@ -176,6 +175,7 @@ public class Accidente {
 
 	/**
 	 * Elimina el vehículo de este accidente.
+	 * 
 	 * @param v
 	 */
 	public void removeVehiculo(Vehiculo v) {
@@ -185,6 +185,7 @@ public class Accidente {
 
 	/**
 	 * Añade un vehículo.
+	 * 
 	 * @param vehiculo
 	 */
 	public void internalAddVehiculo(Vehiculo vehiculo) {
@@ -199,7 +200,9 @@ public class Accidente {
 	}
 
 	/**
-	 * Crea una copia del Set de damnificado que recorre para eliminar los borrados e insertar los nuevos.
+	 * Crea una copia del Set de damnificado que recorre para eliminar los
+	 * borrados e insertar los nuevos.
+	 * 
 	 * @param damnificados
 	 */
 	public void setDamnificados(Collection<Damnificado> damnificados) {
@@ -219,6 +222,7 @@ public class Accidente {
 
 	/**
 	 * Añade el damnificado a este accidente.
+	 * 
 	 * @param d
 	 */
 	public void addDamnificado(Damnificado d) {
@@ -228,6 +232,7 @@ public class Accidente {
 
 	/**
 	 * Elimina el vehículo de este accidente.
+	 * 
 	 * @param d
 	 */
 	public void removeDamnificado(Damnificado d) {
@@ -237,6 +242,7 @@ public class Accidente {
 
 	/**
 	 * Añade un damnificado.
+	 * 
 	 * @param damnificado
 	 */
 	public void internalAddDamnificado(Damnificado damnificado) {
