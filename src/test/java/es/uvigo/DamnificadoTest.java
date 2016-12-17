@@ -19,22 +19,43 @@ import org.junit.Test;
 public class DamnificadoTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
+	/**
+	 * Crear entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("si-database");
 	}
 
+	/**
+	 * Cerrar entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (emf != null && emf.isOpen())
 			emf.close();
 	}
 
+	/**
+	 * Renovar la conexión.
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	@After
 	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
 		super.renewConnection();
 	}
 
+	/**
+	 * Inserta un damnificado y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testCreateDamnificado() throws SQLException {
 		final Damnificado dam = new Damnificado();
@@ -56,6 +77,12 @@ public class DamnificadoTest extends SQLBasedTest {
 		assertEquals(1, rs.getInt("total"));
 	}
 
+	/**
+	 * Realiza una búsqueda de un damnificado y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindById() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
@@ -74,7 +101,12 @@ public class DamnificadoTest extends SQLBasedTest {
 		assertEquals(id, dam.getId());
 	}
 
-	// Update
+	/**
+	 * Actualiza un damnificado almacenado y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testUpdateDamnificado() throws SQLException {
 		// prepare database for test
@@ -109,29 +141,31 @@ public class DamnificadoTest extends SQLBasedTest {
 
 	}
 
-	// Update by merge
+	/**
+	 * Actualiza un damnificado almacenado mediante merge y comprueba su
+	 * correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	private Damnificado aDetachedDamnificado = null;
 
 	@Test
 	public void testUpdateByMerge() throws SQLException {
 		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
-		statement
-				.executeUpdate(
-						"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
-								+ "values (24, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
-						Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate(
+				"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
+						+ "values (24, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
+				Statement.RETURN_GENERATED_KEYS);
 		int id = getLastInsertedId(statement);
 
 		doTransaction(emf, em -> {
 			aDetachedDamnificado = em.find(Damnificado.class, id);
 		});
-		// e is detached, because the entitymanager em is closed (see
-		// doTransaction)
 
 		aDetachedDamnificado.setEdad(21);
 		aDetachedDamnificado.setSexo("Hombre");
-		
+
 		doTransaction(emf, em -> {
 			em.merge(aDetachedDamnificado);
 		});
@@ -146,16 +180,19 @@ public class DamnificadoTest extends SQLBasedTest {
 		assertEquals(id, rs.getInt("id"));
 	}
 
-	// Delete
+	/**
+	 * Elimina un damnificado y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testDeleteDamnificado() throws SQLException {
 		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
-		statement
-				.executeUpdate(
-						"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
-								+ "values (24, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
-						Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate(
+				"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
+						+ "values (24, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
+				Statement.RETURN_GENERATED_KEYS);
 		int id = getLastInsertedId(statement);
 
 		doTransaction(emf, em -> {
@@ -171,28 +208,32 @@ public class DamnificadoTest extends SQLBasedTest {
 		assertEquals(0, rs.getInt("total"));
 	}
 
-	// List
+	/**
+	 * Lista varios damnificados almacenados y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testListDamnificado() throws SQLException {
 		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
-		statement
-				.executeUpdate(
-						"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
-								+ "values (34, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
-						Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate(
+				"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
+						+ "values (34, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
+				Statement.RETURN_GENERATED_KEYS);
 		// prepare database for test
-		statement
-				.executeUpdate(
-						"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
-								+ "values (31, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
-						Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate(
+				"INSERT INTO Damnificado(Edad, Gravedad, Pasajero, Rango_edad, Sexo)"
+						+ "values (31, 'Muerto', 'Delantero-derecha', '20-25', 'Mujer')",
+				Statement.RETURN_GENERATED_KEYS);
 
 		List<Damnificado> damnificados = emf.createEntityManager()
-				.createQuery("SELECT dam FROM Damnificado dam ORDER BY dam.edad DESC", Damnificado.class).getResultList();
+				.createQuery("SELECT dam FROM Damnificado dam ORDER BY dam.edad DESC", Damnificado.class)
+				.getResultList();
 
 		// check
-		//assertEquals(2, damnificados.size());
+		// assertEquals(2, damnificados.size());
 		assertEquals(34, damnificados.get(0).getEdad());
 		assertEquals(31, damnificados.get(1).getEdad());
 	}

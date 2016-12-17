@@ -20,22 +20,43 @@ import org.junit.Test;
 public class ViaTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
+	/**
+	 * Crear entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("si-database");
 	}
 
+	/**
+	 * Cerrar entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (emf != null && emf.isOpen())
 			emf.close();
 	}
 
+	/**
+	 * Renovar la conexión.
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	@After
 	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
 		super.renewConnection();
 	}
 
+	/**
+	 * Inserta una vía y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testCreateVia() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
@@ -64,6 +85,11 @@ public class ViaTest extends SQLBasedTest {
 		assertEquals(1, rs.getInt("total"));
 	}
 
+	/**
+	 * Realiza una búsqueda de una vía y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindVia() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
@@ -92,6 +118,12 @@ public class ViaTest extends SQLBasedTest {
 		assertEquals(via, via.getAccidentes().iterator().next().getVia());
 	}
 
+	/**
+	 * Inserta una vía a varios accidentes y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	private Via detachedVia = null;
 
 	@Test(expected = LazyInitializationException.class)
@@ -105,14 +137,12 @@ public class ViaTest extends SQLBasedTest {
 		int viaId = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate(
-				"INSERT INTO Accidente(fecha, via_id) values('2016-01-01', " + viaId + ")",
+		statement.executeUpdate("INSERT INTO Accidente(fecha, via_id) values('2016-01-01', " + viaId + ")",
 				Statement.RETURN_GENERATED_KEYS);
 		int accidenteId = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate(
-				"INSERT INTO Accidente(fecha, via_id) values('2016-01-01', " + viaId + ")",
+		statement.executeUpdate("INSERT INTO Accidente(fecha, via_id) values('2016-01-01', " + viaId + ")",
 				Statement.RETURN_GENERATED_KEYS);
 
 		doTransaction(emf, em -> {

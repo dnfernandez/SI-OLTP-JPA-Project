@@ -25,6 +25,12 @@ public class SQLBasedTest {
 		}
 	}
 
+	/**
+	 * Reinicia la conexión con la base de datos.
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	public static void renewConnection() throws ClassNotFoundException, SQLException {
 		try {
 			jdbcConnection.close();
@@ -36,12 +42,22 @@ public class SQLBasedTest {
 		jdbcConnection = createConnection();
 	}
 
+	/**
+	 * @return Connection
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	private static Connection createConnection() throws ClassNotFoundException, SQLException {
 		Class.forName(JDBC_DRIVER);
 		return DriverManager.getConnection(DB_URL, USER, PASS);
 
 	}
-	
+
+	/**
+	 * @param statement
+	 * @return last_inserted_id
+	 * @throws SQLException
+	 */
 	public int getLastInsertedId(Statement statement) throws SQLException {
 		ResultSet rs = statement.getGeneratedKeys();
 		rs.next();

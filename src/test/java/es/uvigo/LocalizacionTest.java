@@ -20,23 +20,43 @@ import org.junit.Test;
 public class LocalizacionTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
+	/**
+	 * Crear entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("si-database");
 	}
 
+	/**
+	 * Cerrar entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (emf != null && emf.isOpen())
 			emf.close();
 	}
 
+	/**
+	 * Renovar la conexión.
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	@After
 	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
 		super.renewConnection();
 	}
 
-	// Create
+	/**
+	 * Inserta una localización y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testCreateLocalizacion() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
@@ -62,7 +82,12 @@ public class LocalizacionTest extends SQLBasedTest {
 
 	}
 
-	// Find
+	/**
+	 * Realiza una búsqueda de una localización y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindLocalizacion() throws SQLException {
 		// prepare database for test
@@ -72,7 +97,9 @@ public class LocalizacionTest extends SQLBasedTest {
 		int localizacionId = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Accidente(fecha, localizacion_id) values('2016-01-01', " + localizacionId + ")", Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate(
+				"INSERT INTO Accidente(fecha, localizacion_id) values('2016-01-01', " + localizacionId + ")",
+				Statement.RETURN_GENERATED_KEYS);
 		int accidenteId = getLastInsertedId(statement);
 
 		// test code
@@ -85,21 +112,30 @@ public class LocalizacionTest extends SQLBasedTest {
 		assertEquals(loc, loc.getAccidentes().iterator().next().getLocalizacion());
 	}
 
+	/**
+	 * Inserta una localización a varios accidentes y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	private Localizacion detachedLocalizacion = null;
 
 	@Test(expected = LazyInitializationException.class)
 	public void testLazyInitializationException() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Localizacion(localidad) values('Orense')", Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate("INSERT INTO Localizacion(localidad) values('Orense')",
+				Statement.RETURN_GENERATED_KEYS);
 		int localizacionId = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Accidente(fecha, localizacion_id) values('2016-01-01', " + localizacionId + ")",
+		statement.executeUpdate(
+				"INSERT INTO Accidente(fecha, localizacion_id) values('2016-01-01', " + localizacionId + ")",
 				Statement.RETURN_GENERATED_KEYS);
 		int accidenteId = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Accidente(fecha, localizacion_id) values('2016-01-01', " + localizacionId + ")",
+		statement.executeUpdate(
+				"INSERT INTO Accidente(fecha, localizacion_id) values('2016-01-01', " + localizacionId + ")",
 				Statement.RETURN_GENERATED_KEYS);
 
 		doTransaction(emf, em -> {

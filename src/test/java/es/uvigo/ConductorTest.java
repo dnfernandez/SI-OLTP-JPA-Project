@@ -20,23 +20,40 @@ import org.junit.Test;
 public class ConductorTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
+	/**
+	 * Crear entity manager factory.
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("si-database");
 	}
 
+	/**
+	 * Cerrar entity manager factory.
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (emf != null && emf.isOpen())
 			emf.close();
 	}
 
+	/**
+	 * Renovar la conexión.
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	@After
 	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
 		super.renewConnection();
 	}
 
-	// C
+	/**
+	 * Inserta un conductor y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testCreateConductor() throws SQLException {
 		final Conductor con = new Conductor();
@@ -57,7 +74,12 @@ public class ConductorTest extends SQLBasedTest {
 		assertEquals(1, rs.getInt("total"));
 	}
 
-	// R
+	/**
+	 * Realiza una búsqueda de un conductor y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindById() throws SQLException {
 		// prepare database for test
@@ -78,7 +100,11 @@ public class ConductorTest extends SQLBasedTest {
 		assertEquals(id, con.getId());
 	}
 
-	// U
+	/**
+	 * Actualiza un conductor almacenado y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testUpdateConductor() throws SQLException {
 		// prepare database for test
@@ -110,9 +136,15 @@ public class ConductorTest extends SQLBasedTest {
 
 	}
 
+	/**
+	 * Actualiza un conductor almacenado mediante merge y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
+
 	private Conductor aDetachedConductor = null;
 
-	// U
 	@Test
 	public void testUpdateByMerge() throws SQLException {
 		// prepare database for test
@@ -125,8 +157,6 @@ public class ConductorTest extends SQLBasedTest {
 		doTransaction(emf, em -> {
 			aDetachedConductor = em.find(Conductor.class, id);
 		});
-		// e is detached, because the entitymanager em is closed (see
-		// doTransaction)
 
 		aDetachedConductor.setEbrio(true);
 		aDetachedConductor.setEdad(28);
@@ -149,7 +179,11 @@ public class ConductorTest extends SQLBasedTest {
 		assertEquals(id, rs.getInt("id"));
 	}
 
-	// D
+	/**
+	 * Elimina un conductor y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testDeleteConductor() throws SQLException {
 		// prepare database for test
@@ -172,10 +206,15 @@ public class ConductorTest extends SQLBasedTest {
 		assertEquals(0, rs.getInt("total"));
 	}
 
-	// L
+	/**
+	 * Lista varios conductores almacenados y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testListConductor() throws SQLException {
-		// prepare database for tes
+		// prepare database for test
 		Statement statement = jdbcConnection.createStatement();
 		statement.executeUpdate("INSERT INTO Conductor(ebrio, edad, rango_edad, sexo) values(true,50,'45-50','Mujer')",
 				Statement.RETURN_GENERATED_KEYS);

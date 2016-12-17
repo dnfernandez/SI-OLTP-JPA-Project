@@ -20,23 +20,43 @@ import org.junit.Test;
 public class VehiculoTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
+	/**
+	 * Crear entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("si-database");
 	}
 
+	/**
+	 * Cerrar entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (emf != null && emf.isOpen())
 			emf.close();
 	}
 
+	/**
+	 * Renovar la conexión.
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	@After
 	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
 		super.renewConnection();
 	}
 
-	// C
+	/**
+	 * Inserta un vehículo y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testCreateVehiculo() throws SQLException {
 		final Vehiculo veh = new Vehiculo();
@@ -60,7 +80,12 @@ public class VehiculoTest extends SQLBasedTest {
 		assertEquals(1, rs.getInt("total"));
 	}
 
-	// R
+	/**
+	 * Realiza una búsqueda de un vehículo y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindById() throws SQLException {
 		// prepare database for test
@@ -85,7 +110,11 @@ public class VehiculoTest extends SQLBasedTest {
 		assertEquals(id, veh.getId());
 	}
 
-	// U
+	/**
+	 * Actualiza un vehículo almacenado y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testUpdateVehiculo() throws SQLException {
 		// prepare database for test
@@ -123,7 +152,12 @@ public class VehiculoTest extends SQLBasedTest {
 
 	}
 
-	// U
+	/**
+	 * Actualiza un vehículo almacenado mediante merge y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	private Vehiculo aDetachedVehiculo = null;
 
 	@Test
@@ -166,7 +200,11 @@ public class VehiculoTest extends SQLBasedTest {
 		assertEquals(id, rs.getInt("id"));
 	}
 
-	// D
+	/**
+	 * Elimina un vehículo y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testDeleteVehiculo() throws SQLException {
 		// prepare database for test
@@ -189,7 +227,11 @@ public class VehiculoTest extends SQLBasedTest {
 		assertEquals(0, rs.getInt("total"));
 	}
 
-	// L
+	/**
+	 * Lista varios vehículos almacenados y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testListVehiculo() throws SQLException {
 		// prepare database for test

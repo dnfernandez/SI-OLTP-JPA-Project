@@ -20,23 +20,43 @@ import org.junit.Test;
 public class ClimaTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
+	/**
+	 * Crear entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		emf = Persistence.createEntityManagerFactory("si-database");
 	}
 
+	/**
+	 * Cerrar entity manager factory.
+	 * 
+	 * @throws Exception
+	 */
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		if (emf != null && emf.isOpen())
 			emf.close();
 	}
 
+	/**
+	 * Renovar la conexión.
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
 	@After
 	public void renewConnectionAfterTest() throws ClassNotFoundException, SQLException {
 		super.renewConnection();
 	}
 
-	// C
+	/**
+	 * Inserta un clima y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testCreateClima() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
@@ -61,7 +81,11 @@ public class ClimaTest extends SQLBasedTest {
 		assertEquals(1, rs.getInt("total"));
 	}
 
-	// R
+	/**
+	 * Realiza una búsqueda de un clima y comprueba su correcta funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
 	@Test
 	public void testFindClima() throws SQLException {
 		// prepare database for test
@@ -85,12 +109,19 @@ public class ClimaTest extends SQLBasedTest {
 		assertEquals(cli, cli.getAccidentes().iterator().next().getClima());
 	}
 
-	private Clima detachedClima= null;
+	/**
+	 * Inserta un clima a varios accidentes y comprueba su correcta
+	 * funcionalidad.
+	 * 
+	 * @throws SQLException
+	 */
+	private Clima detachedClima = null;
 
 	@Test(expected = LazyInitializationException.class)
 	public void testLazyInitializationException() throws SQLException {
 		Statement statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')", Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate("INSERT INTO Clima(condicion_meteorologica) values('Nublado')",
+				Statement.RETURN_GENERATED_KEYS);
 		int climaId = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
@@ -103,7 +134,7 @@ public class ClimaTest extends SQLBasedTest {
 				Statement.RETURN_GENERATED_KEYS);
 
 		doTransaction(emf, em -> {
-			detachedClima= em.find(Clima.class, climaId);
+			detachedClima = em.find(Clima.class, climaId);
 		});
 		assertEquals(1, detachedClima.getAccidentes().size());
 		assertEquals(accidenteId, detachedClima.getAccidentes().iterator().next().getId());

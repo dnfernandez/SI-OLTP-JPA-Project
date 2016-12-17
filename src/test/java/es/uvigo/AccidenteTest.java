@@ -21,7 +21,7 @@ public class AccidenteTest extends SQLBasedTest {
 	private static EntityManagerFactory emf;
 
 	/**
-	 * Crear entity manager factory.
+	 * Crear entity manager factory.	  
 	 * @throws Exception
 	 */
 	@BeforeClass
@@ -30,7 +30,7 @@ public class AccidenteTest extends SQLBasedTest {
 	}
 
 	/**
-	 * Cerrar entity manager factory.
+	 * Cerrar entity manager factory.	  
 	 * @throws Exception
 	 */
 	@AfterClass
@@ -40,7 +40,7 @@ public class AccidenteTest extends SQLBasedTest {
 	}
 
 	/**
-	 * Renovar la conexión.
+	 * Renovar la conexión.	 
 	 * @throws ClassNotFoundException
 	 * @throws SQLException
 	 */
@@ -50,7 +50,9 @@ public class AccidenteTest extends SQLBasedTest {
 	}
 
 	/**
-	 * Inserta un damnificado, un accidente y su relación y se comprueba su correcta funcionalidad. 
+	 * Inserta un damnificado, un accidente y su relación y se comprueba su
+	 * correcta funcionalidad.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -88,7 +90,9 @@ public class AccidenteTest extends SQLBasedTest {
 	}
 
 	/**
-	 * Inserta un vehículo, un accidente y su relación y se comprueba su correcta funcionalidad. 
+	 * Inserta un vehículo, un accidente y su relación y se comprueba su
+	 * correcta funcionalidad.
+	 * 
 	 * @throws SQLException
 	 */
 	@Test
@@ -107,8 +111,9 @@ public class AccidenteTest extends SQLBasedTest {
 		int idAc = getLastInsertedId(statement);
 
 		statement = jdbcConnection.createStatement();
-		statement.executeUpdate("INSERT INTO Accidente_Vehiculo(vehiculos_id, accidentes_id) " + "values(" + idVeh
-				+ "," + idAc + ")", Statement.RETURN_GENERATED_KEYS);
+		statement.executeUpdate(
+				"INSERT INTO Accidente_Vehiculo(vehiculos_id, accidentes_id) " + "values(" + idVeh + "," + idAc + ")",
+				Statement.RETURN_GENERATED_KEYS);
 
 		EntityManager em = emf.createEntityManager();
 		Vehiculo veh = em.find(Vehiculo.class, idVeh);
