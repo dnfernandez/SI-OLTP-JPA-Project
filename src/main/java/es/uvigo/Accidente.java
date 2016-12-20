@@ -113,9 +113,9 @@ public class Accidente {
 	 * Guarda la vía. Si existe la vía, se elimina el accidente y lo añade tras
 	 * modificarlo.
 	 * 
-	 * @param Via
+	 * @param via
 	 */
-	public void setVia(Via Via) {
+	public void setVia(Via via) {
 		if (this.via != null) {
 			this.via.internalRemoveAccidente(this);
 		}
